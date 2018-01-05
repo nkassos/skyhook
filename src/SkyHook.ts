@@ -36,7 +36,8 @@ class SkyHook {
         return Promise.resolve().then((): Array<String> => {
             let dependencyGraph = new DependencyGraph();
             //add nodes
-            for (let serviceName in this.services.keys()) {
+            let serviceNames = services.keys();
+            for (let serviceName of serviceNames) {
                 dependencyGraph.addNode(serviceName);
             }
 

@@ -6,14 +6,9 @@
     "sourceMap": true,
     "experimentalDecorators": true,
     "declaration": true,
+    "baseUrl": ".",
     "lib": ["es6"]
   },
-  "files": [
-    "./node_modules/@types/node/index.d.ts",
-
-    "./node_modules/dependency-graph/dist/index.d.ts",
-    "./node_modules/dependency-graph/dist/DependencyGraph.d.ts"
-  ],
   "include": [
     "src/**/*.ts",
     "test/**/*.ts"

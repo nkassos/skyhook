@@ -2,8 +2,8 @@
   "name": "skyhook",
   "version": "1.0.0",
   "description": "A dependency injection framework for nodejs and browser",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
@@ -16,14 +16,18 @@
     "@types/lodash": "^4.14.91",
     "@types/mocha": "^2.2.45",
     "@types/node": "^8.5.2",
+    "@types/reflect-metadata": "^0.1.0",
     "chai": "^4.1.2",
     "mocha": "^4.0.1",
     "ts-node": "^4.1.0",
+    "tsconfig-paths": "^2.7.3",
     "typescript": "^2.6.2"
   },
   "dependencies": {
     "async": "^2.6.0",
     "dependency-graph": "file:../dependency-graph",
-    "lodash": "^4.17.4"
+    "function-parser": "file:../function-parser",
+    "lodash": "^4.17.4",
+    "reflect-metadata": "^0.1.10"
   }
 }
