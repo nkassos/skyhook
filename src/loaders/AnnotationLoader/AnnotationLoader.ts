@@ -1,4 +1,4 @@
-import SkyHook from '../../SkyHook';
+import Skyhook from '../../Skyhook';
 import LoadingDock from '../../LoadingDock';
 import AnnotationParserUtil from './util/AnnotationParserUtil';
 import * as _ from 'lodash';
@@ -22,9 +22,9 @@ class AnnotationLoader implements LoadingDock {
         return this;
     }
 
-    load(skyhook?: SkyHook): SkyHook {
+    load(skyhook?: Skyhook): Skyhook {
         if(!skyhook) {
-            skyhook = new SkyHook();
+            skyhook = new Skyhook();
         }
 
         let serviceDefinitions: ServiceDefinition[] = [];

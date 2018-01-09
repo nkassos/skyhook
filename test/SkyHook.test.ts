@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import Skyhook from '../src/SkyHook';
+import Skyhook from '../src/Skyhook';
 
 describe('some stuff', () => {
     it('should create a service with no dependencies', (cb) => {

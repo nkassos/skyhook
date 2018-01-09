@@ -4,7 +4,7 @@ import ServiceDefinition from './ServiceDefinition';
 import * as _ from 'lodash';
 import * as async from 'async';
 
-class SkyHook {
+class Skyhook {
 
     services: Map<String, ServiceDefinition>;
 
@@ -78,4 +78,4 @@ class SkyHook {
     }
 }
 
-export default SkyHook;
+export default Skyhook;
