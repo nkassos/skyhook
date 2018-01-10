@@ -6,6 +6,8 @@ import * as _ from "lodash";
 import QualifierKey from "../symbols/QualifierKey";
 import FunctionParser from 'function-parser';
 import ServiceMethodDefinition from "../ServiceMethodDefinition";
+import ServiceUtil from "./ServiceUtil";
+import FactoryDefinition from "../FactoryDefinition";
 
 class AnnotationParserUtil {
     static parseServiceName(constructor: Function): String {
@@ -53,6 +55,15 @@ class AnnotationParserUtil {
         return serviceMethods;
     };
 
+    static createServiceFactory(args: string[]): Function {
+        return (...serviceArgs) => {
+            let argValues = new Map<string, any>();
+            _.each(args, (arg, index) => {
+                argValues.set(arg, serviceArgs[index]);
+            });
+        }
+    }
+
     static parseService(constructor: Function): ServiceDefinition {
         let serviceName = Reflect.hasMetadata(ServiceKey, constructor.prototype) ?
             Reflect.getMetadata(ServiceKey, constructor.prototype) :
@@ -67,6 +78,26 @@ class AnnotationParserUtil {
         };
 
         return serviceDefinition;
+    }
+
+    static parseFactory(constructor: Function): FactoryDefinition[] {
+        let factoryContructor: any = constructor;
+        let factory: any = new factoryContructor();
+
+        let serviceFactories: FactoryDefinition[] = [];
+        let target = constructor.prototype;
+        _.each(Object.getOwnPropertyNames(target), (prop) => {
+            if(_.isFunction(target[prop]) && Reflect.hasMetadata(ServiceKey, target, prop)) {
+                let factoryDefinition: FactoryDefinition = {
+                    name: Reflect.getMetadata(ServiceKey, target, prop),
+                    args: AnnotationParserUtil.parseQualifiers(target, prop),
+                    fn: target[prop].bind(factory)
+                };
+                serviceFactories.push(factoryDefinition);
+            }
+        });
+
+        return serviceFactories;
     }
 }
 

@@ -24,7 +24,7 @@ class Context {
         return this;
     }
 
-    get(name: String): Object {
+    get(name: String): any {
         if(!this.services.has(name)) {
             throw new Error(`Service ${name} not found`);
         }

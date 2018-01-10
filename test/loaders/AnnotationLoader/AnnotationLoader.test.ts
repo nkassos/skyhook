@@ -5,6 +5,7 @@ import Service from "src/loaders/AnnotationLoader/annotations/Service";
 import Qualifier from "src/loaders/AnnotationLoader/annotations/Qualifier";
 import Inject from "src/loaders/AnnotationLoader/annotations/Inject";
 import PostConstruct from "src/loaders/AnnotationLoader/annotations/PostConstruct";
+import Factory from "src/loaders/AnnotationLoader/annotations/Factory";
 
 describe('AnnotationLoader', () => {
     describe('#load', () => {
@@ -180,6 +181,77 @@ describe('AnnotationLoader', () => {
             }).catch((err) => {
                 assert.equal(err.message, 'this is cyclic');
                 cb();
+            });
+        });
+
+        it('should load using a factory class using', (cb) => {
+            @Factory()
+            class TestFactory {
+                constructor() {}
+
+                @Service('qualifiedName')
+                testService1() {
+                    return {
+                        name: 'testService1'
+                    };
+                }
+
+                @Service()
+                testService2(@Qualifier('qualifiedName') testService1) {
+                    return {
+                        name: 'testService2',
+                        otherName: testService1.name
+                    };
+                }
+            }
+
+            let loader = new AnnotationLoader([
+                TestFactory
+            ]);
+
+            loader.load().initialize().then((context: Context) => {
+                assert.equal(context.get('qualifiedName').name, 'testService1');
+                assert.equal(context.get('testService2').name, 'testService2');
+                assert.equal(context.get('testService2').otherName, 'testService1');
+                cb();
+            }).catch((err) => {
+                cb(err);
+            });
+        });
+
+        it('should load using a mix of services and factories', (cb) => {
+            class TestService1 {
+                name: string;
+
+                constructor() {
+                    this.name = 'testService1';
+                }
+            }
+
+            @Factory()
+            class TestFactory {
+
+                @Service()
+                testService2(testService1: TestService1) {
+                    return {
+                        name: 'testService2',
+                        otherName: testService1.name
+                    };
+                }
+            }
+
+            let loader = new AnnotationLoader([
+                TestService1,
+                TestFactory
+            ]);
+
+            loader.load().initialize().then((context: Context) => {
+                assert.equal(context.get('testService1').name, 'testService1');
+                assert.equal(context.get('testService2').name, 'testService2');
+                assert.equal(context.get('testService2').otherName, 'testService1');
+                cb();
+            }).catch((err) => {
+                cb(err);
             });
         });
     });

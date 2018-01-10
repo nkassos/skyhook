@@ -4,6 +4,9 @@ import AnnotationParserUtil from './util/AnnotationParserUtil';
 import * as _ from 'lodash';
 import ServiceDefinition from "./ServiceDefinition";
 import ServiceUtil from './util/ServiceUtil';
+import Factory from "./annotations/Factory";
+import FactoryKey from "./symbols/FactoryKey";
+import FactoryDefinition from "./FactoryDefinition";
 
 class AnnotationLoader implements LoadingDock {
 
@@ -28,8 +31,16 @@ class AnnotationLoader implements LoadingDock {
         }
 
         let serviceDefinitions: ServiceDefinition[] = [];
+        let serviceFactories: FactoryDefinition[] = [];
         _.each(this.services, (service: Function) => {
-            serviceDefinitions.push(AnnotationParserUtil.parseService(service));
+            if(Reflect.hasMetadata(FactoryKey, service)) {
+                let factories = AnnotationParserUtil.parseFactory(service);
+                _.each(factories, (factory) => {
+                    serviceFactories.push(factory);
+                });
+            } else {
+                serviceDefinitions.push(AnnotationParserUtil.parseService(service));
+            }
         });
 
         _.each(serviceDefinitions, (serviceDefinition: ServiceDefinition) => {
@@ -43,6 +54,14 @@ class AnnotationLoader implements LoadingDock {
                 let service = ServiceUtil.initializeService(serviceDefinition, argValues);
                 return service;
             }, args);
+        });
+
+        _.each(serviceFactories, (serviceFactory: FactoryDefinition) => {
+            skyhook.addService(serviceFactory.name, (...serviceArgs) => {
+                return Promise.resolve().then(() => {
+                    return serviceFactory.fn.apply(null, serviceArgs);
+                });
+            }, serviceFactory.args);
         });
 
         return skyhook;
