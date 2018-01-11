@@ -3,7 +3,7 @@ import FactoryKey from '../symbols/FactoryKey';
 
 function Factory() {
     return (target: Function) => {
-        Reflect.defineMetadata(FactoryKey, FactoryKey, target);
+        Reflect.defineMetadata(FactoryKey, FactoryKey, target.prototype);
     };
 }
 

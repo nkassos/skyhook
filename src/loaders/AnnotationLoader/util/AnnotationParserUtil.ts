@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import InjectKey from "../symbols/InjectKey";
 import ServiceDefinition from "../ServiceDefinition";
 import ServiceKey from "../symbols/ServiceKey";

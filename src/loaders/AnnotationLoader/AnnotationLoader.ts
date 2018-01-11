@@ -33,7 +33,7 @@ class AnnotationLoader implements LoadingDock {
         let serviceDefinitions: ServiceDefinition[] = [];
         let serviceFactories: FactoryDefinition[] = [];
         _.each(this.services, (service: Function) => {
-            if(Reflect.hasMetadata(FactoryKey, service)) {
+            if(Reflect.hasMetadata(FactoryKey, service.prototype)) {
                 let factories = AnnotationParserUtil.parseFactory(service);
                 _.each(factories, (factory) => {
                     serviceFactories.push(factory);
