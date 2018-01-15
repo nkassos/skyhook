@@ -68,16 +68,20 @@ describe('ServiceUtil', () => {
     });
 
     describe('#initializeService', () => {
-        it('should initialize a service', () => {
+        it('should initialize a service', (cb) => {
             let args = new Map();
             args.set('constructorArg1', 'constructorArgValue');
             args.set('injectMethodArg1', 'injectMethodArgValue');
             args.set('postConstructMethodArg1', 'postConstructMethodArgValue');
 
-            let service = ServiceUtil.initializeService(serviceDefinition, args);
-            assert.equal(service.constructorArgValue, 'constructorArgValue');
-            assert.equal(service.injectMethodArgValue, 'injectMethodArgValue');
-            assert.equal(service.postConstructMethodArgValue, 'postConstructMethodArgValue');
+            ServiceUtil.initializeService(serviceDefinition, args).then((service) => {
+                assert.equal(service.constructorArgValue, 'constructorArgValue');
+                assert.equal(service.injectMethodArgValue, 'injectMethodArgValue');
+                assert.equal(service.postConstructMethodArgValue, 'postConstructMethodArgValue');
+                cb();
+            }).catch((err) => {
+                cb(err);
+            });
         });
     });
 });

@@ -24,7 +24,7 @@ export default class ServiceUtil {
         return service[methodDefinition.name].apply(service, methodArgs);
     };
 
-    static initializeService(serviceDefinition: ServiceDefinition, args: Map<String, any>): any {
+    static initializeService(serviceDefinition: ServiceDefinition, args: Map<String, any>): Promise<any> {
         let constructorArgs = [];
         _.each(serviceDefinition.args, (arg) => {
             constructorArgs.push(args.get(arg));
@@ -36,10 +36,16 @@ export default class ServiceUtil {
             ServiceUtil.runServiceMethod(service, injectMethod, args);
         });
 
+        let postConstructMethods = [];
         _.each(serviceDefinition.postConstructMethods, (postConstructMethod) => {
-            ServiceUtil.runServiceMethod(service, postConstructMethod, args);
+            postConstructMethods.push(Promise.resolve().then(() => {
+                return ServiceUtil.runServiceMethod(service, postConstructMethod, args);
+            }));
+        });
+        return Promise.all(postConstructMethods).then(() => {
+            return service;
         });
 
-        return service;
+        //return service;
     };
 }
