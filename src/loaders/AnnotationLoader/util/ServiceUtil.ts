@@ -12,6 +12,13 @@ export default class ServiceUtil {
         _.each(serviceDefinition.postConstructMethods, (postConstructMethod) => {
             args = _.union(args, postConstructMethod.args);
         });
+        let propertyArgs: string[] = [];
+        _.each(serviceDefinition.properties, (property) => {
+            propertyArgs.push(property.serviceName ? property.serviceName : property.serviceName);
+
+        });
+        args = _.union(args, propertyArgs);
+
         return args;
     };
 
@@ -31,6 +38,11 @@ export default class ServiceUtil {
         });
         let serviceConstructor: any = serviceDefinition.fn;
         let service = new serviceConstructor(...constructorArgs);
+
+        _.each(serviceDefinition.properties, (property) => {
+            let serviceName = property.serviceName ? property.serviceName : property.name;
+            service[property.name] = args.get(serviceName);
+        });
 
         _.each(serviceDefinition.injectMethods, (injectMethod) => {
             ServiceUtil.runServiceMethod(service, injectMethod, args);

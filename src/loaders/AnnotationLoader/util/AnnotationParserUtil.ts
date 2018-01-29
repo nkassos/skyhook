@@ -1,14 +1,15 @@
 import 'reflect-metadata';
-import InjectKey from "../symbols/InjectKey";
-import ServiceDefinition from "../ServiceDefinition";
-import ServiceKey from "../symbols/ServiceKey";
-import PostConstructKey from "../symbols/PostConstructKey";
-import * as _ from "lodash";
-import QualifierKey from "../symbols/QualifierKey";
+import InjectKey from '../symbols/InjectKey';
+import PropertyKey from '../symbols/PropertyKey';
+import ServiceDefinition from '../ServiceDefinition';
+import ServiceKey from '../symbols/ServiceKey';
+import PostConstructKey from '../symbols/PostConstructKey';
+import * as _ from 'lodash';
+import QualifierKey from '../symbols/QualifierKey';
 import FunctionParser from 'function-parser';
-import ServiceMethodDefinition from "../ServiceMethodDefinition";
-import ServiceUtil from "./ServiceUtil";
-import FactoryDefinition from "../FactoryDefinition";
+import ServiceMethodDefinition from '../ServiceMethodDefinition';
+import FactoryDefinition from '../FactoryDefinition';
+import ServicePropertyDefinition from '../ServicePropertyDefinition';
 
 class AnnotationParserUtil {
     static parseServiceName(constructor: Function): String {
@@ -56,6 +57,24 @@ class AnnotationParserUtil {
         return serviceMethods;
     };
 
+    static parseServiceProperties(target: Object): ServicePropertyDefinition[] {
+        let serviceProperties: ServicePropertyDefinition[] = [];
+        if(Reflect.hasMetadata(PropertyKey, target)) {
+            let properties = Reflect.getMetadata(PropertyKey, target);
+            _.each(properties, (propertyName: string) => {
+                let serviceName = Reflect.hasMetadata(QualifierKey, target, propertyName) ?
+                    Reflect.getMetadata(QualifierKey, target, propertyName) :
+                    propertyName;
+                serviceProperties.push({
+                    name: propertyName,
+                    serviceName: serviceName
+                });
+            });
+        }
+
+        return serviceProperties;
+    }
+
     static createServiceFactory(args: string[]): Function {
         return (...serviceArgs) => {
             let argValues = new Map<string, any>();
@@ -74,6 +93,7 @@ class AnnotationParserUtil {
             name: serviceName,
             args: AnnotationParserUtil.parseQualifiers(constructor),
             fn: constructor,
+            properties: AnnotationParserUtil.parseServiceProperties(constructor.prototype),
             injectMethods: AnnotationParserUtil.parseServiceMethods(InjectKey, constructor.prototype),
             postConstructMethods: AnnotationParserUtil.parseServiceMethods(PostConstructKey, constructor.prototype)
         };

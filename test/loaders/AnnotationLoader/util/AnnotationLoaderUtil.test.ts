@@ -2,6 +2,7 @@ import { assert } from 'chai';
 import AnnotationParserUtil from 'src/loaders/AnnotationLoader/util/AnnotationParserUtil';
 import Qualifier from 'src/loaders/AnnotationLoader/annotations/Qualifier';
 import ServiceMethodDefinition from "src/loaders/AnnotationLoader/ServiceMethodDefinition";
+import ServicePropertyDefinition from 'src/loaders/AnnotationLoader/ServicePropertyDefinition';
 import PostConstruct from "src/loaders/AnnotationLoader/annotations/PostConstruct";
 import PostConstructKey from "src/loaders/AnnotationLoader/symbols/PostConstructKey";
 import Inject from "src/loaders/AnnotationLoader/annotations/Inject";
@@ -154,6 +155,24 @@ describe('AnnotationParserUtil', () => {
         });
     });
 
+    describe('#parseServiceProperties', () => {
+        it('should parse Inject properties', () => {
+            class TestService {
+                @Inject()
+                someProperty: string;
+
+                @Inject()
+                @Qualifier('qualified')
+                someOtherProperty: string;
+            }
+
+            let props: ServicePropertyDefinition[] = AnnotationParserUtil.parseServiceProperties(TestService.prototype);
+            assert.equal(props.length, 2);
+            assert.deepInclude(props, {name: 'someProperty', serviceName: 'someProperty'});
+            assert.deepInclude(props, {name: 'someOtherProperty', serviceName: 'qualified'});
+        });
+    });
+
     describe('#parseService', () => {
         it('should parse a service', () => {
             class TestService {
@@ -177,6 +196,16 @@ describe('AnnotationParserUtil', () => {
         it('should parse an annotated service', () => {
             @Service('serviceName')
             class TestService {
+
+                unparsedProperty: string;
+
+                @Inject()
+                parsedProperty: string;
+
+                @Inject()
+                @Qualifier('qualifiedProperty')
+                qualifiedParsedProperty: string;
+
                 constructor(arg1, @Qualifier('qualified') arg2) {}
 
                 @Inject()
@@ -192,6 +221,7 @@ describe('AnnotationParserUtil', () => {
             assert.equal(service.fn, TestService);
             assert.equal(service.injectMethods.length, 1);
             assert.equal(service.postConstructMethods.length, 1);
+            assert.equal(service.properties.length, 2);
         });
     });
 });
