@@ -8,10 +8,12 @@
     "declaration": true,
     "baseUrl": ".",
     "lib": ["es6"]
+//    "paths": {
+//      "src/*": ["src/*"]
+//    }
   },
   "include": [
-    "src/**/*.ts",
-    "test/**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules"

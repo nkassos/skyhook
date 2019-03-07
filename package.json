@@ -5,8 +5,9 @@
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "test": "mocha --require ts-node/register --require tsconfig-paths/register test/**/*.ts",
+    "build": "tsc",
+    "install": "npm run build"
   },
   "author": "Noah Kassos",
   "license": "ISC",
@@ -14,19 +15,19 @@
     "@types/async": "^2.0.46",
     "@types/chai": "^4.0.10",
     "@types/lodash": "^4.14.91",
-    "@types/mocha": "^2.2.45",
-    "@types/node": "^8.5.2",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^11.10.5",
     "@types/reflect-metadata": "^0.1.0",
     "chai": "^4.1.2",
-    "mocha": "^4.0.1",
-    "ts-node": "^4.1.0",
-    "tsconfig-paths": "^2.7.3",
-    "typescript": "^2.6.2"
+    "mocha": "^6.0.2",
+    "ts-node": "^8.0.3",
+    "tsconfig-paths": "^3.8.0",
+    "typescript": "^3.3.3333"
   },
   "dependencies": {
     "async": "^2.6.0",
-    "dependency-graph": "file:../dependency-graph",
-    "function-parser": "file:../function-parser",
+    "dependency-graph": "git+ssh://git@github.com:nkassos/dependency-graph.git",
+    "function-parser": "git+ssh://git@github.com:nkassos/function-parser.git",
     "lodash": "^4.17.4",
     "reflect-metadata": "^0.1.10"
   }
