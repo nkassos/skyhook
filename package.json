@@ -2,8 +2,8 @@
   "name": "skyhook",
   "version": "1.0.0",
   "description": "A dependency injection framework for nodejs and browser",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register --require tsconfig-paths/register test/**/*.ts",
     "build": "tsc",
