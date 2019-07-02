@@ -11,7 +11,6 @@ interface Service {
 function Service(serviceName = null) {
     let service: Service = (target: Function | Object, methodName?: string) => {
         if(target instanceof Function) {
-        //if(_.isFunction(target)) {
             let name = serviceName ?
                 serviceName :
                 AnnotationParserUtil.parseServiceName(target);
