@@ -1,11 +1,13 @@
 import { assert } from 'chai';
-import AnnotationLoader from 'src/loaders/AnnotationLoader/AnnotationLoader';
-import Context from "src/Context";
-import Service from "src/loaders/AnnotationLoader/annotations/Service";
-import Qualifier from "src/loaders/AnnotationLoader/annotations/Qualifier";
-import Inject from "src/loaders/AnnotationLoader/annotations/Inject";
-import PostConstruct from "src/loaders/AnnotationLoader/annotations/PostConstruct";
-import Factory from "src/loaders/AnnotationLoader/annotations/Factory";
+import {
+    AnnotationLoader,
+    Context,
+    Service,
+    Qualifier,
+    Inject,
+    PostConstruct,
+    Factory
+} from "../../../src";
 
 describe('AnnotationLoader', () => {
     describe('#load', () => {
@@ -30,7 +32,7 @@ describe('AnnotationLoader', () => {
                 }
             }
 
-            let loader = new AnnotationLoader([
+            const loader = new AnnotationLoader([
                 TestService1,
                 TestService2
             ]);

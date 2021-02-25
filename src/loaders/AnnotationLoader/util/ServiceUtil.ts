@@ -1,5 +1,4 @@
 import * as _ from "lodash";
-import each from 'async/each';
 import ServiceDefinition from "../ServiceDefinition";
 import ServiceMethodDefinition from "../ServiceMethodDefinition";
 
@@ -57,7 +56,5 @@ export default class ServiceUtil {
         return Promise.all(postConstructMethods).then(() => {
             return service;
         });
-
-        //return service;
     };
 }

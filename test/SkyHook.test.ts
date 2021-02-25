@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import Skyhook from '../src/Skyhook';
 
-describe('some stuff', () => {
+describe('Skyhook', () => {
     it('should create a service with no dependencies', (cb) => {
         class TestService {
             saySomething() {

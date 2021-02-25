@@ -1,10 +1,10 @@
 class ServiceDefinition {
 
-    name: String;
+    name: string;
     factory: Function;
-    dependencies: Array<String>;
+    dependencies: Array<string>;
 
-    constructor(name: String, factory, dependencies: Array<String> = []) {
+    constructor(name: string, factory, dependencies: Array<string> = []) {
         this.name = name;
         this.factory = factory;
         this.dependencies = dependencies;

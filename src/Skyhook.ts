@@ -1,18 +1,17 @@
-import { DependencyGraph } from 'dependency-graph/dist';
+import { DependencyGraph } from 'potpourri';
 import Context from './Context';
 import ServiceDefinition from './ServiceDefinition';
-import * as _ from 'lodash';
 import * as async from 'async';
 
 class Skyhook {
 
-    services: Map<String, ServiceDefinition>;
+    services: Map<string, ServiceDefinition>;
 
     constructor() {
         this.services = new Map();
     }
 
-    addService(name: String, factory: Function, dependencies: Array<String> = []) {
+    addService(name: string, factory: Function, dependencies: Array<string> = []) {
         if(this.services.has(name)) {
             throw 'idiot';
         } else {
@@ -26,35 +25,36 @@ class Skyhook {
         let initService: Function = (context: Context, serviceDefinition: ServiceDefinition): Promise<Object> => {
             return Promise.resolve().then((): Object => {
                 var args: Array<Object> = [];
-                _.each(serviceDefinition.dependencies, (dependencyName: String) => {
+                serviceDefinition.dependencies.forEach((dependencyName) => {
                     args.push(context.get(dependencyName));
                 });
                 return serviceDefinition.factory.apply({}, args);
             });
         };
 
-        return Promise.resolve().then((): Array<String> => {
+        return Promise.resolve().then((): IterableIterator<string> => {
             let dependencyGraph = new DependencyGraph();
             //add nodes
             let serviceNames = services.keys();
             for (let serviceName of serviceNames) {
-                dependencyGraph.addNode(serviceName);
+                dependencyGraph.addNode(serviceName.toString());
             }
 
             // add edges
             services.forEach((value, key, map) => {
                 dependencyGraph.addNode(key);
-                _.each(value.dependencies, (dependencyName) => {
+
+                value.dependencies.forEach((dependencyName) => {
                     dependencyGraph.addEdge(dependencyName, key);
                 });
             });
 
             return dependencyGraph.getOrder();
-        }).then((order: Array<String>): Array<ServiceDefinition> => {
+        }).then((order: IterableIterator<string>): Array<ServiceDefinition> => {
             let serviceDefinitions: Array<ServiceDefinition> = [];
-            _.each(order, (serviceName: String) => {
+            for(let serviceName of order) {
                 serviceDefinitions.push(services.get(serviceName));
-            });
+            }
             return serviceDefinitions;
         }).then((serviceDefinitions: Array<ServiceDefinition>): Promise<Context> => {
             return new Promise<Context>((resolve, reject) => {

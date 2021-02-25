@@ -1,14 +1,14 @@
 class Context {
 
-    services: Map<String, Object>;
-    interceptors: Map<String, Set<Function>>;
+    services: Map<string, Object>;
+    interceptors: Map<string, Set<Function>>;
 
     constructor() {
         this.services = new Map();
         this.interceptors = new Map();
     }
 
-    addService(name: String, service: Object): Context {
+    addService(name: string, service: Object): Context {
         if(this.services.has(name)) {
             throw new Error(`Service ${name} already exists`);
         }
@@ -17,14 +17,14 @@ class Context {
         return this;
     }
 
-    addInterceptor<T>(serviceName: String, interceptor: (service: T) => T): Context {
+    addInterceptor<T>(serviceName: string, interceptor: (service: T) => T): Context {
         let interceptorSet = this.interceptors.get(serviceName) || new Set();
         interceptorSet.add(interceptor);
         this.interceptors.set(serviceName, interceptorSet);
         return this;
     }
 
-    get(name: String): any {
+    get(name: string): any {
         if(!this.services.has(name)) {
             throw new Error(`Service ${name} not found`);
         }
