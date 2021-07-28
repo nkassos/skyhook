@@ -24,8 +24,8 @@ class AnnotationParserUtil {
         let qualifiedArgs: string[] = Reflect.hasMetadata(QualifierKey, target, methodName) ?
             Reflect.getMetadata(QualifierKey, target, methodName) :
             [];
-        let fnArgs = functionParser.parseFunction(methodName ? target[methodName] : target);
-        _.each(fnArgs, (fnArg, argIndex) => {
+        let fnArgs = functionParser.parseFunctionArguments(methodName ? target[methodName] : target);
+        fnArgs.forEach((fnArg, argIndex) => {
             if(qualifiedArgs[argIndex]) {
                 args.push(qualifiedArgs[argIndex]);
             } else {
@@ -50,6 +50,7 @@ class AnnotationParserUtil {
         let serviceMethods: ServiceMethodDefinition[] = [];
         if(Reflect.hasMetadata(key, target)) {
             let methods = Reflect.getMetadata(key, target);
+
             _.each(methods, (method) => {
                 serviceMethods.push(AnnotationParserUtil.parseServiceMethod(target, method));
             });

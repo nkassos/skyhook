@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import ServiceKey from '../symbols/ServiceKey';
 import AnnotationParserUtil from '../util/AnnotationParserUtil';
-import * as _ from 'lodash';
 
 interface Service {
     (constructory: Function): any;
