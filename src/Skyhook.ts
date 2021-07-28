@@ -1,8 +1,7 @@
-import { DependencyGraph } from 'potpourri';
 import Context from './Context';
 import ServiceDefinition from './ServiceDefinition';
 import {initializeServices} from "./util/initializeServices";
-import {buildDependencyGraph} from "./util/buildDependencyGraph";
+import {getDependencyOrder} from "./util/getDependencyOrder";
 
 class Skyhook {
 
@@ -21,10 +20,9 @@ class Skyhook {
     }
 
     async initialize(): Promise<Context> {
-        const dependencyGraph = buildDependencyGraph(this.services);
-        const order = dependencyGraph.getOrder();
+        const dependencyOrder = getDependencyOrder(this.services);
         const serviceDefinitions: ServiceDefinition[] = [];
-        for(const serviceName of order) {
+        for(const serviceName of dependencyOrder) {
             serviceDefinitions.push(this.services.get(serviceName));
         }
 

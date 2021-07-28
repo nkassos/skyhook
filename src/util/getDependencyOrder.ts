@@ -1,7 +1,7 @@
 import {DependencyGraph} from "potpourri";
 import ServiceDefinition from "../ServiceDefinition";
 
-export function buildDependencyGraph(services: Map<string, ServiceDefinition>): DependencyGraph {
+export function getDependencyOrder(services: Map<string, ServiceDefinition>): IterableIterator<string> {
     const dependencyGraph = new DependencyGraph();
     services.forEach((serviceDefinition, serviceName) => {
         dependencyGraph.addNode(serviceName);
@@ -13,5 +13,5 @@ export function buildDependencyGraph(services: Map<string, ServiceDefinition>): 
         });
     });
 
-    return dependencyGraph;
+    return dependencyGraph.getOrder();
 }
