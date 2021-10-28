@@ -1,5 +1,5 @@
-import {DependencyGraph} from "potpourri";
-import ServiceDefinition from "../ServiceDefinition";
+import { DependencyGraph } from 'potpourri';
+import type { ServiceDefinition } from '../domain/ServiceDefinition';
 
 export function getDependencyOrder(services: Map<string, ServiceDefinition>): IterableIterator<string> {
     const dependencyGraph = new DependencyGraph();

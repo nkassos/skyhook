@@ -1,4 +1,4 @@
-class Context {
+export class SkyhookContext {
 
     services: Map<string, Object>;
     interceptors: Map<string, Set<Function>>;
@@ -8,7 +8,7 @@ class Context {
         this.interceptors = new Map();
     }
 
-    addService(name: string, service: Object): Context {
+    addService(name: string, service: Object): SkyhookContext {
         if(this.services.has(name)) {
             throw new Error(`Service ${name} already exists`);
         }
@@ -17,7 +17,7 @@ class Context {
         return this;
     }
 
-    addInterceptor<T>(serviceName: string, interceptor: (service: T) => T): Context {
+    addInterceptor<T>(serviceName: string, interceptor: (service: T) => T): SkyhookContext {
         let interceptorSet = this.interceptors.get(serviceName) || new Set();
         interceptorSet.add(interceptor);
         this.interceptors.set(serviceName, interceptorSet);
@@ -33,5 +33,3 @@ class Context {
     }
 
 }
-
-export default Context;

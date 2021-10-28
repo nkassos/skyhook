@@ -1,7 +1,7 @@
-import Context from "../Context";
-import ServiceDefinition from "../ServiceDefinition";
+import { SkyhookContext } from '../SkyhookContext';
+import { ServiceDefinition } from '../domain/ServiceDefinition';
 
-export async function initService(serviceDefinition: ServiceDefinition, context: Context): Promise<any> {
+export async function initService(serviceDefinition: ServiceDefinition, context: SkyhookContext): Promise<any> {
     var args: Array<Object> = [];
     serviceDefinition.dependencies.forEach((dependencyName) => {
         args.push(context.get(dependencyName));

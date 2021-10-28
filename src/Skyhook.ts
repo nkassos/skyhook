@@ -1,9 +1,9 @@
-import Context from './Context';
-import ServiceDefinition from './ServiceDefinition';
-import {initializeServices} from "./util/initializeServices";
-import {getDependencyOrder} from "./util/getDependencyOrder";
+import { SkyhookContext } from './SkyhookContext';
+import type { ServiceDefinition } from './domain/ServiceDefinition';
+import { initializeServices } from './util/initializeServices';
+import { getDependencyOrder } from './util/getDependencyOrder';
 
-class Skyhook {
+export class Skyhook {
 
     services: Map<string, ServiceDefinition>;
 
@@ -15,11 +15,11 @@ class Skyhook {
         if(this.services.has(name)) {
             throw new Error(`Dependency ${name} already present`);
         } else {
-            this.services.set(name, new ServiceDefinition(name, factory, dependencies));
+            this.services.set(name, { name, factory, dependencies });
         }
     }
 
-    async initialize(): Promise<Context> {
+    async initialize(): Promise<SkyhookContext> {
         const dependencyOrder = getDependencyOrder(this.services);
         const serviceDefinitions: ServiceDefinition[] = [];
         for(const serviceName of dependencyOrder) {
@@ -31,5 +31,3 @@ class Skyhook {
         return context;
     }
 }
-
-export default Skyhook;
