@@ -2,7 +2,7 @@ import { DependencyGraph } from 'potpourri';
 import type { ServiceDefinition } from '../domain/ServiceDefinition';
 
 export function getDependencyOrder(services: Map<string, ServiceDefinition>): IterableIterator<string> {
-    const dependencyGraph = new DependencyGraph();
+    const dependencyGraph = new DependencyGraph<string>();
     services.forEach((serviceDefinition, serviceName) => {
         dependencyGraph.addNode(serviceName);
     });
