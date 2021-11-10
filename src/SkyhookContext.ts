@@ -1,14 +1,14 @@
-export class SkyhookContext {
+export class SkyhookContext<T> {
 
-    services: Map<string, Object>;
-    interceptors: Map<string, Set<Function>>;
+    services: Map<keyof T, T[keyof T]>;
+    interceptors: Map<keyof T, Set<(service: T[keyof T]) => T[keyof T]>>;
 
     constructor() {
         this.services = new Map();
         this.interceptors = new Map();
     }
 
-    addService(name: string, service: Object): SkyhookContext {
+    addService<K extends keyof T>(name: K, service: T[K]): SkyhookContext<T> {
         if(this.services.has(name)) {
             throw new Error(`Service ${name} already exists`);
         }
@@ -17,19 +17,19 @@ export class SkyhookContext {
         return this;
     }
 
-    addInterceptor<T>(serviceName: string, interceptor: (service: T) => T): SkyhookContext {
+    addInterceptor<K extends keyof T>(serviceName: K, interceptor: (service: T[K]) => T[K]): SkyhookContext<T> {
         let interceptorSet = this.interceptors.get(serviceName) || new Set();
         interceptorSet.add(interceptor);
         this.interceptors.set(serviceName, interceptorSet);
         return this;
     }
 
-    get(name: string): any {
+    get<K extends keyof T>(name: K): T[K] {
         if(!this.services.has(name)) {
             throw new Error(`Service ${name} not found`);
         }
 
-        return this.services.get(name);
+        return this.services.get(name) as T[K];
     }
 
 }

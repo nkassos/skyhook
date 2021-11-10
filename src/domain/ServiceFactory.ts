@@ -1,0 +1,1 @@
+export type ServiceFactory<T, K extends keyof T> = (...args: Array<T[keyof T]>) => T[K];

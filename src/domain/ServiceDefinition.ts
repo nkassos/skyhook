@@ -1,7 +1,9 @@
-export interface ServiceDefinition {
+import type { ServiceFactory } from '../domain/ServiceFactory';
 
-    name: string;
-    factory: Function;
-    dependencies: Array<string>;
+export interface ServiceDefinition<T, K extends keyof T> {
+
+    name: K;
+    factory: ServiceFactory<T, K>;
+    dependencies: Array<K>;
 
 }
