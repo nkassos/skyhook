@@ -1,5 +1,7 @@
 import { assert } from 'chai';
 import { Skyhook } from '../src/Skyhook';
+import { SimpleGraph } from '../../potpourri';
+import { getOrder } from '../src/util/getDependencyOrder';
 
 describe('Skyhook', () => {
     interface Hello {
@@ -14,6 +16,26 @@ describe('Skyhook', () => {
         test1: Hello
         test2: World
     }
+
+    it('should create the correct order', () => {
+        const g = new SimpleGraph();
+        g.addNode('node-1');
+        g.addNode('node-2');
+        g.addNode('node-3');
+
+        g.addEdge('node-1', 'node-3');
+        g.addEdge('node-3', 'node-2');
+
+        const order = getOrder(g);
+        assert.ok(order);
+        assert.equal(order.next().value, 'node-1');
+        assert.equal(order.next().value, 'node-3');
+        assert.equal(order.next().value, 'node-2');
+
+        const next = order.next();
+        assert.equal(next.value, undefined);
+        assert.equal(next.done, true);
+    });
 
     it('should create a service with no dependencies', (cb) => {
         const skyhook = new Skyhook<SkyhookTestInterface>();
