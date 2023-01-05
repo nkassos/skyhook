@@ -7,12 +7,13 @@ import { getDependencyOrder } from './util/getDependencyOrder';
 
 export class Skyhook<T> {
 
-    services: Map<keyof T, ServiceDefinition<T, keyof T>>;
+    services: Map<keyof T, ServiceDefinition<T>>;
 
     constructor() {
         this.services = new Map();
     }
 
+    // addService<K extends Extract<keyof T, string>>(
     addService<K extends keyof T>(
         name: K,
         factory: ServiceFactory<T, K>,
@@ -27,7 +28,7 @@ export class Skyhook<T> {
 
     async initialize(): Promise<SkyhookContext<T>> {
         const dependencyOrder = getDependencyOrder(this.services);
-        const serviceDefinitions: ServiceDefinition<T, keyof T>[] = [];
+        const serviceDefinitions: ServiceDefinition<T>[] = [];
         for(const serviceName of dependencyOrder) {
             serviceDefinitions.push(this.services.get(serviceName as keyof T));
         }

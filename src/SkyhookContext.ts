@@ -1,10 +1,10 @@
 export class SkyhookContext<T> {
 
-    private readonly services: Map<keyof T, T[keyof T]>;
+    private readonly services: Partial<T>;
     private readonly interceptors: Map<keyof T, Set<(service: T[keyof T]) => T[keyof T]>>;
 
     constructor(
-        services: Map<keyof T, T[keyof T]>,
+        services: Partial<T>,
         interceptors?: Map<keyof T, Set<(service: T[keyof T]) => T[keyof T]>>) {
 
         this.services = services;
@@ -19,11 +19,11 @@ export class SkyhookContext<T> {
     // }
 
     get<K extends keyof T>(name: K): T[K] {
-        if(!this.services.has(name)) {
+        if(!this.services[name]) {
             throw new Error(`Service ${name} not found`);
         }
 
-        return this.services.get(name) as T[K];
+        return this.services[name] as T[K];
     }
 
 }

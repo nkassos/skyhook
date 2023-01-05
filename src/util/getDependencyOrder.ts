@@ -2,7 +2,7 @@ import { SimpleGraph, depthFirstSearch, PrimitiveLabel, LinkedStack } from 'potp
 import type { ServiceDefinition } from '../domain/ServiceDefinition';
 import { ArrayStack } from '../../../potpourri/dist/Stack/ArrayStack';
 
-export function getDependencyOrder<T>(services: Map<keyof T, ServiceDefinition<T, keyof T>>): IterableIterator<PrimitiveLabel> {
+export function getDependencyOrder<T>(services: Map<keyof T, ServiceDefinition<T>>): IterableIterator<PrimitiveLabel> {
     const graph = new SimpleGraph();
     services.forEach((serviceDefinition, serviceName) => {
         graph.addNode(serviceName);
